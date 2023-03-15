@@ -126,7 +126,6 @@ class UpgradeList {
     }
 }
 
-
 var game = new Game();
 
 setInterval(async function() {
