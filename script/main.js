@@ -49,7 +49,8 @@ S
 }
 
 class Upgrade {
-    constructor(elem, name, cost) {
+    constructor(elem, name, cost, type) {
+        this.type = type
         this.elem = elem;
         this.name = name;
         this.cost = cost;
@@ -76,22 +77,38 @@ class Upgrade {
     makeVisible() {
         this.elem.style.display = "block";
     }
+
+    hide() {
+        this.elem.style.display = "none";
+    }
 }
 
 class UpgradeList {
     constructor() {
         // get upgrade class from html
         this.upgradeElems = document.getElementsByClassName("upgrade");
+        this.permUpgradeElems = document.getElementsByClassName("permUpgrade");
         this.upgrades = [];
-        console.log(this.upgradeElems.length)
+        this.permUpgrades = [];
 
         for (var i = 0; i < this.upgradeElems.length; i++) {
             var upgrade = new Upgrade(
                 this.upgradeElems[i], 
                 this.upgradeElems[i].firstElementChild.id, 
-                this.upgradeElems[i].lastElementChild.textContent
+                this.upgradeElems[i].lastElementChild.textContent,
+                "normal"
             );
             this.upgrades.push(upgrade);
+        }
+
+        for (var i = 0; i < this.permUpgradeElems.length; i++) {
+            var upgrade = new Upgrade(
+                this.permUpgradeElems[i], 
+                this.permUpgradeElems[i].children[1].id, 
+                this.permUpgradeElems[i].lastElementChild.textContent,
+                "permanent"
+            );
+            this.permUpgrades.push(upgrade);
         }
     }
 
@@ -101,12 +118,22 @@ class UpgradeList {
                 return this.upgrades[i];
             }
         }
+        for (var i = 0; i < this.permUpgrades.length; i++) {
+            if (this.permUpgrades[i].name == name) {
+                return this.permUpgrades[i];
+            }
+        }
     }
 
     updateVisibility(balance) {
         for (var i = 0; i < this.upgrades.length; i++) {
             if (balance > (this.upgrades[i].cost * 0.8)) {
                 this.upgrades[i].makeVisible();
+            }
+        }
+        for (var i = 0; i < this.permUpgrades.length; i++) {
+            if (balance > (this.permUpgrades[i].cost * 0.8) && this.permUpgrades[i].amount == 0) {
+                this.permUpgrades[i].makeVisible();
             }
         }
     }
@@ -118,6 +145,9 @@ class UpgradeList {
         }
 
         upgrade.setAmount(upgrade.amount + 1);
+        if (upgrade.type == "permanent") {
+            upgrade.hide();
+        }
         return true;
     }
 
@@ -137,7 +167,7 @@ document.getElementById("ebsBtn").addEventListener("click", () => game.purchaseU
 document.getElementById("ucfBtn").addEventListener("click", () => game.purchaseUpgrade("ucfBtn", "multiplicative", 0.15));
 document.getElementById("wnfBtn").addEventListener("click", () => game.purchaseUpgrade("wnfBtn", "passive-additive", 50));
 document.getElementById("snfBtn").addEventListener("click", () => game.purchaseUpgrade("snfBtn", "passive-multiplicative", 1.2));
-
+document.getElementById("hog1Btn").addEventListener("click", () => game.purchaseUpgrade("hog1Btn", "additive", 100000));
 
 
 

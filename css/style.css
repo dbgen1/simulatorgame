@@ -4,6 +4,12 @@
     left: 30px;
 }
 
+#title {
+    position: relative;
+    top: 10px;
+    left: 30px;
+}
+
 #atomBtn:hover {
     background-color: #000;
     color: #fff;
@@ -33,6 +39,23 @@
     margin-bottom: 0px;
 }
 
-#title {
-    display: none;
-}   
+#permUpgrades {
+    position: absolute;
+    top: 160px;
+    left: 28px;
+    display: inline-block;
+    padding: 10px;
+}
+
+#permUpgrades p {
+    text-align: center;
+    border: 1px solid black;
+    padding: 10px;
+    margin: 0;
+}
+
+#permUpgrades p:not(:last-child) {
+    margin-bottom: 0px;
+}
+
+ 
