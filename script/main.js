@@ -1,25 +1,33 @@
+function toNumString(number) {
+    if (number <= 10000000) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    else {
+        var exponent = Math.floor(Math.log10(number));
+        var mantissa = number / Math.pow(10, exponent);
+        return mantissa.toFixed(4) + "e" + exponent;
+    }
+}
+
+
 class Game {
     constructor() {
+        this.atoms = 100000000;
+
         this.additive = 1;
         this.multiplicative = 1;
         this.passive = 0;
         this.upgrades = new UpgradeList();
 
         this.createAtoms = this.createAtoms.bind(this);
-
     }
 
     updateAtoms(amount) {
         var atomCountElem = document.getElementById("atomCount");
-        var atomCount = parseInt(atomCountElem.textContent);
-        atomCount += amount;
-        atomCountElem.textContent = atomCount;
+        this.atoms += amount;
+        atomCountElem.textContent = toNumString(this.atoms);
     
-        this.upgrades.updateVisibility(atomCount);
-    }
-
-    getAtoms() {
-        return parseInt(document.getElementById("atomCount").textContent);
+        this.upgrades.updateVisibility(this.atoms);
     }
 
     createAtoms() {
@@ -27,7 +35,7 @@ class Game {
     }
 
     purchaseUpgrade(name, effect_type = "additive", effect_amount = 1) {
-        if (!(this.upgrades.purchase(name, this.getAtoms()))) {
+        if (!(this.upgrades.purchase(name, this.atoms))) {
             return;
         }
 
@@ -60,8 +68,8 @@ class Upgrade {
     }
 
     updateElement() {
-        this.elem.firstElementChild.textContent = this.amount;
-        this.elem.lastElementChild.textContent = this.cost;
+        this.elem.firstElementChild.textContent = toNumString(this.amount);
+        this.elem.lastElementChild.textContent = toNumString(this.cost);
     }
 
     setCost(cost) {
@@ -98,6 +106,7 @@ class UpgradeList {
                 this.upgradeElems[i].lastElementChild.textContent,
                 "normal"
             );
+            upgrade.updateElement();
             this.upgrades.push(upgrade);
         }
 
@@ -108,6 +117,7 @@ class UpgradeList {
                 this.permUpgradeElems[i].lastElementChild.textContent,
                 "permanent"
             );
+            upgrade.updateElement();
             this.permUpgrades.push(upgrade);
         }
     }
