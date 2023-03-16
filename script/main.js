@@ -17,7 +17,7 @@ class Game {
     
         this.upgrades.updateVisibility(atomCount);
     }
-S
+
     getAtoms() {
         return parseInt(document.getElementById("atomCount").textContent);
     }
